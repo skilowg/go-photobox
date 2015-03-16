@@ -1,9 +1,12 @@
 package main
 
 import (
+	"fmt"
 	"net/http"
 	"os"
+	"strings"
 
+	"github.com/thedahv/go-photobox/fs"
 )
 
 func main() {
@@ -12,10 +15,19 @@ func main() {
 		port = "3000"
 	}
 
+	photosPath := os.Getenv("FILES")
 
 	http.HandleFunc("/", func(w http.ResponseWriter, r *http.Request) {
-		w.Write([]byte("hello world"))
+		paths, err := fs.List(photosPath)
+		if err != nil {
+			w.WriteHeader(http.StatusForbidden)
+			w.Write([]byte(err.Error()))
+		} else {
+			w.Write([]byte(strings.Join(paths, ",")))
+		}
+
 	})
 
+	fmt.Printf("Serving files from %s on port %s\n", photosPath, port)
 	http.ListenAndServe(":"+port, nil)
 }

@@ -1,6 +1,7 @@
-// Package fs manages the scanning and indexing of photos at
+package photobox
+
+// Functions to manage the scanning and indexing of photos at
 // a given location to display in the photobox.
-package fs
 
 import (
 	"fmt"

@@ -2,33 +2,34 @@ var Photobox = React.createClass({
   getInitialState: function () {
     return {
       files: [],
-      fileRoot: ''
+      fileStack: []
     };
   },
 
   loadFileData: function (path) {
     var req = new XMLHttpRequest(),
-        filePath = '';
+        filePath = '',
+        newFileStack = this.state.fileStack;
 
     // Set up request to server for files at `path`
-
     if (path.length) {
-      filePath = '?path=';
-      filePath += this.state.fileRoot.length ?
-        // Prepend the fileroot to the path if we have one
-        this.state.fileRoot + '/' + path :
-        // No fileroot, so just send the path
-        path;
-
-    } else {
       filePath = '';
+
+      if (path === '..') {
+        this.state.fileStack.pop();
+        path = '';
+      } else {
+        newFileStack.push(path);
+      }
+
+      filePath = this.state.fileStack.join('/');
     }
 
-    req.open("GET", "/files" + filePath);
+    req.open("GET", "/files" + (filePath.length ? "?path=" + filePath : ''));
     req.onreadystatechange = function (evt) {
       if (req.readyState === 4) {
         this.setState({
-          fileRoot: path,
+          fileStack: newFileStack,
           files: req.response.split(',')
         })
       }
@@ -46,7 +47,7 @@ var Photobox = React.createClass({
       <FileList
         files={this.state.files}
         notifyPathChange={this.loadFileData}
-        fileRoot={this.state.fileRoot} />
+        showBrowseUp={this.state.fileStack.length > 0} />
     );
   }
 });

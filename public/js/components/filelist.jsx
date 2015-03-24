@@ -1,22 +1,26 @@
 var FileList = React.createClass({
   handleClick: function (path, evt) {
-    if (this.props.notifyPathChange) {
-      this.props.notifyPathChange(path);
-    }
-
+    this.props.notifyPathChange(path);
     evt.preventDefault();
   },
 
   getDefaultProps: function () {
     return {
-      files: []
+      files: [],
+      fileRoot: '',
+      notifyPathChange: function () {}
     }
   },
 
   render: function () {
-    var that = this;
+    var that = this,
+        flist = this.props.files;
 
-    var files = this.props.files
+    if (this.props.showBrowseUp) {
+      flist.unshift('..');
+    }
+
+    var files = flist
       .map(function (file) {
         return file.trim();
       })

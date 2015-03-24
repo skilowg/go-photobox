@@ -6,6 +6,7 @@ package photobox
 import (
 	"fmt"
 	"io/ioutil"
+	"strings"
 )
 
 // List takes a path to a reachable location on the disk and returns
@@ -28,7 +29,10 @@ func List(path string) ([]string, error) {
 	}
 
 	for _, file := range files {
-		results = append(results, file.Name())
+		n := file.Name()
+		if !strings.HasPrefix(n, ".") {
+			results = append(results, n)
+		}
 	}
 
 	return results, nil

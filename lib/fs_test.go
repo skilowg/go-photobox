@@ -3,6 +3,7 @@ package photobox
 import (
 	"fmt"
 	"os"
+	"strings"
 	"testing"
 
 	. "github.com/smartystreets/goconvey/convey"
@@ -54,6 +55,15 @@ func TestList(t *testing.T) {
 			Convey("List should return a mix of directories and files", func() {
 				So(len(files), ShouldEqual, 2)
 			})
+
+			Convey("List should exclude hidden files", func() {
+				files, err := List("./testdata")
+				So(err, ShouldBeNil)
+
+				for _, file := range files {
+					So(strings.HasPrefix(file, "."), ShouldBeFalse)
+				}
+			})
 		})
 
 		Convey("Given a non-existent path", func() {
@@ -68,6 +78,7 @@ func TestList(t *testing.T) {
 				So(len(files), ShouldEqual, 0)
 			})
 		})
+
 		Convey("Given an inaccessible path", func() {
 			files, err := List("./testdata/inaccessible")
 

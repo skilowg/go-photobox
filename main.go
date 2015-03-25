@@ -1,11 +1,11 @@
 package main
 
 import (
+	"encoding/json"
 	"fmt"
 	"net/http"
 	"os"
 	"regexp"
-	"strings"
 
 	"github.com/thedahv/go-photobox/lib"
 )
@@ -42,14 +42,26 @@ func main() {
 			path = photosPath
 		}
 
-		paths, err := photobox.List(path)
+		files, err := photobox.List(path)
+
 		if err != nil {
 			w.WriteHeader(http.StatusForbidden)
 			w.Write([]byte(err.Error()))
-		} else {
-			w.Write([]byte(strings.Join(paths, ",")))
+
+			return
 		}
 
+		type jsonFile struct {
+			Name  string `json:"name"`
+			IsDir bool   `json:"isDir"`
+		}
+		var results []jsonFile
+
+		for _, file := range files {
+			results = append(results, jsonFile{file.Name(), file.IsDir()})
+		}
+		jsonData, err := json.Marshal(results)
+		w.Write(jsonData)
 	})
 
 	fmt.Printf("Serving files from %s on port %s\n", photosPath, port)

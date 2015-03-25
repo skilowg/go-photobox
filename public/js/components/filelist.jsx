@@ -17,16 +17,13 @@ var FileList = React.createClass({
         flist = this.props.files;
 
     if (this.props.showBrowseUp) {
-      flist.unshift('..');
+      flist.unshift({name: '..', isDir: true});
     }
 
     var files = flist
       .map(function (file) {
-        return file.trim();
-      })
-      .map(function (file) {
         return (
-          <File file={file} key={file}
+          <File file={file} key={file.name}
                 notifyClick={that.handleClick.bind(that, file)} />
         );
       });

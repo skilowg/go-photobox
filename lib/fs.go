@@ -6,6 +6,7 @@ package photobox
 import (
 	"fmt"
 	"io/ioutil"
+	"os"
 	"strings"
 )
 
@@ -16,8 +17,8 @@ import (
 // be called again with a new path if the client wishes to drill into a folder.
 //
 // If the given path is not reachable, List returns an error.
-func List(path string) ([]string, error) {
-	var results []string
+func List(path string) ([]os.FileInfo, error) {
+	var results []os.FileInfo
 
 	if len(path) == 0 {
 		return results, fmt.Errorf("path cannot be blank")
@@ -29,9 +30,8 @@ func List(path string) ([]string, error) {
 	}
 
 	for _, file := range files {
-		n := file.Name()
-		if !strings.HasPrefix(n, ".") {
-			results = append(results, n)
+		if !strings.HasPrefix(file.Name(), ".") {
+			results = append(results, file)
 		}
 	}
 

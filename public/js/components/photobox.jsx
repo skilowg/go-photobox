@@ -6,7 +6,7 @@ var Photobox = React.createClass({
     };
   },
 
-  loadFileData: function (path) {
+  navDir: function (path) {
     var req = new XMLHttpRequest(),
         filePath = '',
         newFileStack = this.state.fileStack;
@@ -27,19 +27,33 @@ var Photobox = React.createClass({
 
     req.open("GET", "/files" + (filePath.length ? "?path=" + filePath : ''));
     req.onreadystatechange = function (evt) {
+      var files = [];
+
       if (req.readyState === 4) {
-        this.setState({
-          fileStack: newFileStack,
-          files: req.response.split(',')
-        })
+        try {
+          files = JSON.parse(req.response);
+          this.setState({
+            fileStack: newFileStack,
+            files: files
+          });
+        } catch(e) {
+          console.log(e);
+        }
       }
     }.bind(this);
 
     req.send();
+
+  },
+
+  loadFileData: function (file) {
+    if (file.isDir) {
+      this.navDir(file.name);
+    }
   },
 
   componentDidMount: function () {
-    this.loadFileData('');
+    this.loadFileData({name: '', isDir: true});
   },
 
   render: function () {

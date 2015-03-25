@@ -1,7 +1,10 @@
 var File = React.createClass({
   getDefaultProps: function () {
     return {
-      file: "",
+      file: {
+        name: '',
+        isDir: false
+      },
       notifyClick: function () {}
     }
   },
@@ -9,8 +12,8 @@ var File = React.createClass({
   render: function () {
     return (
       <li>
-        <a href={this.props.file} onClick={this.props.notifyClick}>
-          {this.props.file}
+        <a href={this.props.file.name} onClick={this.props.notifyClick}>
+          {this.props.file.name}
         </a>
       </li>
     );

@@ -61,7 +61,7 @@ func TestList(t *testing.T) {
 				So(err, ShouldBeNil)
 
 				for _, file := range files {
-					So(strings.HasPrefix(file, "."), ShouldBeFalse)
+					So(strings.HasPrefix(file.Name(), "."), ShouldBeFalse)
 				}
 			})
 		})

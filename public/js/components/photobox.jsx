@@ -60,6 +60,7 @@ var Photobox = React.createClass({
     return (
       <FileList
         files={this.state.files}
+        fileRoot={this.state.fileStack.join('/')}
         notifyPathChange={this.loadFileData}
         showBrowseUp={this.state.fileStack.length > 0} />
     );

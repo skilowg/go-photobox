@@ -5,15 +5,30 @@ var File = React.createClass({
         name: '',
         isDir: false
       },
+      fileRoot: '',
       notifyClick: function () {}
     }
   },
 
   render: function () {
+    var fileLink, fileURL, fileRoot = this.props.fileRoot;
+    fileRoot = fileRoot.length ? fileRoot + '/' : '';
+    fileURL = '/photos/' + fileRoot + encodeURIComponent(this.props.file.name);
+
+    if (this.props.file.isDir) {
+      fileLink = this.props.file.name;
+    } else {
+      fileLink = (
+        <div className="img-wrap">
+          <img src={fileURL} />
+        </div>
+      );
+    }
+
     return (
       <li>
-        <a href={this.props.file.name} onClick={this.props.notifyClick}>
-          {this.props.file.name}
+        <a href={fileURL} onClick={this.props.notifyClick}>
+          {fileLink}
         </a>
       </li>
     );

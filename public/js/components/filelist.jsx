@@ -24,12 +24,13 @@ var FileList = React.createClass({
       .map(function (file) {
         return (
           <File file={file} key={file.name}
+                fileRoot={that.props.fileRoot}
                 notifyClick={that.handleClick.bind(that, file)} />
         );
       });
 
     return (
-      <ul>
+      <ul className="files">
         {files}
       </ul>
     );

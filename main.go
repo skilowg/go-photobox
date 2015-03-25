@@ -28,9 +28,18 @@ func main() {
 	}
 
 	photosPath := os.Getenv("FILES")
+	canOpen, err := os.Open(photosPath)
+	canOpen.Close()
+	if err != nil {
+		fmt.Printf("Error opening photobox: %v\n", err)
+		os.Exit(1)
+	}
 
 	fs := http.FileServer(http.Dir("public"))
+	pbfs := http.FileServer(http.Dir(photosPath))
+
 	http.Handle("/", fs)
+	http.Handle("/photos/", http.StripPrefix("/photos/", pbfs))
 
 	http.HandleFunc("/files", func(w http.ResponseWriter, r *http.Request) {
 		var path string

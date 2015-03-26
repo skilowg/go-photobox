@@ -4,6 +4,7 @@ import (
 	"encoding/json"
 	"fmt"
 	"net/http"
+	"net/url"
 	"os"
 	"regexp"
 
@@ -18,7 +19,12 @@ func pathFromRequest(uri string) string {
 		return ""
 	}
 
-	return results[1]
+	p, err := url.QueryUnescape(results[1])
+	if err != nil {
+		return ""
+	}
+
+	return p
 }
 
 func main() {

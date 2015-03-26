@@ -25,7 +25,7 @@ var Photobox = React.createClass({
       filePath = this.state.fileStack.join('/');
     }
 
-    req.open("GET", "/files" + (filePath.length ? "?path=" + filePath : ''));
+    req.open("GET", "/files" + (filePath.length ? "?path=" + encodeURIComponent(filePath) : ''));
     req.onreadystatechange = function (evt) {
       var files = [];
 

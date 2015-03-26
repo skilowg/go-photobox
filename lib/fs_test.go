@@ -94,3 +94,53 @@ func TestList(t *testing.T) {
 
 	})
 }
+
+func TestIsValid(t *testing.T) {
+	Convey("isValid", t, func() {
+
+		Convey("when given an empty filename", func() {
+
+			Convey("should return false", func() {
+				So(isValid(""), ShouldBeFalse)
+			})
+
+		})
+
+		Convey("when given a filename ending in an image format", func() {
+
+			Convey("should return true for files", func() {
+
+				Convey("like png", func() {
+					So(isValid("somefile.png"), ShouldBeTrue)
+				})
+
+				Convey("like jpg", func() {
+					So(isValid("somefile.jpg"), ShouldBeTrue)
+				})
+
+				Convey("like jpeg", func() {
+					So(isValid("somefile.jpeg"), ShouldBeTrue)
+				})
+
+				Convey("like tiff", func() {
+					So(isValid("somefile.tiff"), ShouldBeTrue)
+				})
+
+			})
+
+		})
+
+		Convey("when given a filename with a valid format in the middle of the name", func() {
+
+			Convey("like something.png.skitch", func() {
+
+				Convey("it should return false", func() {
+					So(isValid("something.png.something.skitch"), ShouldBeFalse)
+				})
+
+			})
+
+		})
+
+	})
+}

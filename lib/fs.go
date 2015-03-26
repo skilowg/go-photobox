@@ -7,8 +7,31 @@ import (
 	"fmt"
 	"io/ioutil"
 	"os"
+	"regexp"
 	"strings"
 )
+
+var imgRx *regexp.Regexp
+
+const hiddenFile string = "."
+
+func init() {
+	fileEndings := []string{
+		"\\.png",
+		"\\.jpg",
+		"\\.jpeg",
+		"\\.gif",
+		"\\.tiff",
+	}
+
+	imgRx = regexp.MustCompile(fmt.Sprintf("(%s)$", strings.Join(fileEndings, "|")))
+}
+
+// isValid determines whether a given filename represents a valid
+// image file we want to include in our results
+func isValid(fname string) bool {
+	return imgRx.MatchString(fname)
+}
 
 // List takes a path to a reachable location on the disk and returns
 // the list of files and folders found there.
@@ -30,7 +53,12 @@ func List(path string) ([]os.FileInfo, error) {
 	}
 
 	for _, file := range files {
-		if !strings.HasPrefix(file.Name(), ".") {
+		n := file.Name()
+
+		showFolder := !file.IsDir() || !strings.HasPrefix(n, hiddenFile)
+		showFile := file.IsDir() || isValid(n)
+
+		if showFolder && showFile {
 			results = append(results, file)
 		}
 	}

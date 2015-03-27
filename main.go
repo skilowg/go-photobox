@@ -11,22 +11,6 @@ import (
 	"github.com/thedahv/go-photobox/lib"
 )
 
-func pathFromRequest(uri string) string {
-	rx := regexp.MustCompile("\\/files\\?path=(.+)$")
-	results := rx.FindStringSubmatch(uri)
-
-	if len(results) < 2 {
-		return ""
-	}
-
-	p, err := url.QueryUnescape(results[1])
-	if err != nil {
-		return ""
-	}
-
-	return p
-}
-
 func main() {
 	port := os.Getenv("PORT")
 	if port == "" {
@@ -81,4 +65,22 @@ func main() {
 
 	fmt.Printf("Serving files from %s on port %s\n", photosPath, port)
 	http.ListenAndServe(":"+port, nil)
+}
+
+// pathFromRequest takes a URI with a URL encoded query parameter for a path
+// on disk and returns that path in a format suitable for opening a file
+func pathFromRequest(uri string) string {
+	rx := regexp.MustCompile("\\/files\\?path=(.+)$")
+	results := rx.FindStringSubmatch(uri)
+
+	if len(results) < 2 {
+		return ""
+	}
+
+	p, err := url.QueryUnescape(results[1])
+	if err != nil {
+		return ""
+	}
+
+	return p
 }

@@ -11,8 +11,12 @@ import (
 	"strings"
 )
 
+// imgRx will tell us if a given file matches an expected pattern
+// of whitelisted formats
 var imgRx *regexp.Regexp
 
+// hiddenFile tells us whether a given file represents a hidden file
+// that should be filtered from the results
 const hiddenFile string = "."
 
 func init() {

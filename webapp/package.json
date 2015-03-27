@@ -1,0 +1,16 @@
+{
+  "name": "gophotobox",
+  "version": "0.0.0",
+  "description": "Web App for gophotobox",
+  "main": "gulpfile.js",
+  "dependencies": {
+    "gulp": "~3.8.11",
+    "gulp-concat": "2.4.3"
+  },
+  "devDependencies": {},
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "",
+  "license": "ISC"
+}

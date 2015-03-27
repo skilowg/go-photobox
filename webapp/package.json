@@ -7,7 +7,11 @@
     "gulp": "~3.8.11",
     "gulp-concat": "2.4.3"
   },
-  "devDependencies": {},
+  "devDependencies": {
+    "gulp-babel": "~4.0.0",
+    "gulp-sourcemaps": "~1.5.1",
+    "gulp-plumber": "~1.0.0"
+  },
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1"
   },

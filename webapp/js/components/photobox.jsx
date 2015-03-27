@@ -1,13 +1,14 @@
-var Photobox = React.createClass({
-  getInitialState: function () {
-    return {
+class Photobox extends React.Component {
+  constructor(props) {
+    super(props);
+    this.state = {
       files: [],
       fileStack: []
     };
-  },
+  }
 
-  navDir: function (path) {
-    var req = new XMLHttpRequest(),
+  navDir(path) {
+    let req = new XMLHttpRequest(),
         filePath = '',
         newFileStack = this.state.fileStack;
 
@@ -26,8 +27,8 @@ var Photobox = React.createClass({
     }
 
     req.open("GET", "/files" + (filePath.length ? "?path=" + encodeURIComponent(filePath) : ''));
-    req.onreadystatechange = function (evt) {
-      var files = [];
+    req.onreadystatechange = (evt) => {
+      let files = [];
 
       if (req.readyState === 4) {
         try {
@@ -40,29 +41,29 @@ var Photobox = React.createClass({
           console.log(e);
         }
       }
-    }.bind(this);
+    };
 
     req.send();
 
-  },
+  }
 
-  loadFileData: function (file) {
+  loadFileData(file) {
     if (file.isDir) {
       this.navDir(file.name);
     }
-  },
+  }
 
-  componentDidMount: function () {
+  componentDidMount() {
     this.loadFileData({name: '', isDir: true});
-  },
+  }
 
-  render: function () {
+  render() {
     return (
       <FileList
         files={this.state.files}
         fileRoot={this.state.fileStack.join('/')}
-        notifyPathChange={this.loadFileData}
+        notifyPathChange={this.loadFileData.bind(this)}
         showBrowseUp={this.state.fileStack.length > 0} />
     );
   }
-});
+}

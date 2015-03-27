@@ -1,17 +1,10 @@
-var File = React.createClass({
-  getDefaultProps: function () {
-    return {
-      file: {
-        name: '',
-        isDir: false
-      },
-      fileRoot: '',
-      notifyClick: function () {}
-    }
-  },
+class File extends React.Component {
+  constructor(props) {
+    super(props);
+  }
 
-  render: function () {
-    var fileLink, fileURL, fileRoot = this.props.fileRoot;
+  render() {
+    let fileLink, fileURL, fileRoot = this.props.fileRoot;
     fileRoot = fileRoot.length ? fileRoot + '/' : '';
     fileURL = '/photos/' + fileRoot + encodeURIComponent(this.props.file.name);
 
@@ -32,5 +25,12 @@ var File = React.createClass({
         </a>
       </li>
     );
+
   }
-});
+}
+
+File.defaultProps = {
+  file: { name: '', isDir: false },
+  fileRoot: '',
+  notifyClick: function () {}
+};

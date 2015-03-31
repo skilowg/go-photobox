@@ -1,0 +1,84 @@
+@import "bourbon/bourbon";
+@import "neat/neat";
+
+html, body {
+  margin: 0;
+  padding: 0;
+  height: 100%;
+  min-height: 100%;
+}
+
+body {
+  font-family: Helvetica, sans-serif;
+}
+
+h1 {
+  text-align: center;
+}
+
+#app {
+  background-color: #666fEE;
+  text-align: center;
+  height: 100%;
+}
+
+.photobox {
+  @include outer-container;
+  height: 100%;
+  min-height: 100%;
+}
+
+.folders, .files {
+  margin: 0 auto;
+
+  list-style: none;
+  margin-left: 0;
+  padding-left: 0;
+}
+
+.photoboxItem {
+  $columns: 4;
+  $columnWidth: 100% / $columns;
+
+  display: inline-block;
+  width: $columnWidth;
+  min-width: $columnWidth;
+
+  padding: 0.5em;
+}
+
+.folders {
+  margin-bottom: 2em;
+
+  & .photoboxItem {
+    height: 4em;
+
+    .photoboxItem__dir {
+      display: inline-block;
+      width: 100%;
+      height: 100%;
+      background-color: #FFFFFF;
+    }
+  }
+}
+
+.files .photoboxItem {
+  $itemHeight: 10em;
+  height: $itemHeight;
+  min-height: $itemHeight;
+
+  .img-wrap {
+    $imgHeight: 100%;
+    height: $imgHeight;
+    max-height: $imgHeight;
+
+    text-align: center;
+
+    overflow: hidden;
+
+    img {
+      width: 100%;
+    }
+  }
+
+}

@@ -10,7 +10,8 @@
   "devDependencies": {
     "gulp-babel": "~4.0.0",
     "gulp-sourcemaps": "~1.5.1",
-    "gulp-plumber": "~1.0.0"
+    "gulp-plumber": "~1.0.0",
+    "gulp-sass": "~1.3.3"
   },
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1"

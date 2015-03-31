@@ -59,11 +59,17 @@ class Photobox extends React.Component {
 
   render() {
     return (
-      <FileList
-        files={this.state.files}
-        fileRoot={this.state.fileStack.join('/')}
-        notifyPathChange={this.loadFileData.bind(this)}
-        showBrowseUp={this.state.fileStack.length > 0} />
+      <div className="photobox">
+        <FolderList
+          files={this.state.files}
+          fileRoot={this.state.fileStack.join('/')}
+          notifyPathChange={this.loadFileData.bind(this)}
+          showBrowseUp={this.state.fileStack.length > 0} />
+
+        <FileList
+          files={this.state.files}
+          fileRoot={this.state.fileStack.join('/')} />
+      </div>
     );
   }
 }

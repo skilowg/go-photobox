@@ -9,23 +9,8 @@ class FileList extends React.Component {
   }
 
   render () {
-    let flist = this.props.files;
-
-    flist.sort((left, right) => {
-      if (left.isDir && right.isDir) {
-        return left.name <= right.name ? -1 : 1;
-      } else if (left.isDir) {
-        return -1;
-      } else if (right.isDir) {
-        return 1;
-      } else {
-        return left.name <= right.name ? -1 : 1;
-      }
-    });
-
-    if (this.props.showBrowseUp) {
-      flist.unshift({name: '..', isDir: true});
-    }
+    let flist = this.props.files.filter(file => !file.isDir);
+    flist.sort((left, right) => left.name <= right.name ? -1 : 1);
 
     let files = flist
       .map(file => {
@@ -46,6 +31,5 @@ class FileList extends React.Component {
 
 FileList.defaultProps = {
   files: [],
-  fileRoot: '',
-  notifyPathChange: function () {}
+  fileRoot: ''
 };

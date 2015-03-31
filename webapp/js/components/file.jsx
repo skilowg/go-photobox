@@ -4,26 +4,27 @@ class File extends React.Component {
   }
 
   render() {
-    let fileLink, fileURL, fileRoot = this.props.fileRoot;
+    let fileURL, fileRoot = this.props.fileRoot, contents;
+
     fileRoot = fileRoot.length ? fileRoot + '/' : '';
     fileURL = '/photos/' + fileRoot + encodeURIComponent(this.props.file.name);
 
     if (this.props.file.isDir) {
-      fileLink = this.props.file.name;
+      contents = (
+        <a href={fileURL} onClick={this.props.notifyClick} className="photoboxItem__dir">
+          {this.props.file.name}
+        </a>
+      );
     } else {
-      fileLink = (
-        <div className="img-wrap">
+      contents = (
+        <div className="img-wrap photoboxItem__photo">
           <img src={fileURL} />
         </div>
       );
     }
 
     return (
-      <li>
-        <a href={fileURL} onClick={this.props.notifyClick}>
-          {fileLink}
-        </a>
-      </li>
+      <li className="photoboxItem">{contents}</li>
     );
 
   }

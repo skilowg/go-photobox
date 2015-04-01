@@ -12,7 +12,7 @@ class File extends React.Component {
     if (this.props.file.isDir) {
       contents = (
         <a href={fileURL} onClick={this.props.notifyClick} className="photoboxItem__dir">
-          {this.props.file.name}
+          <span>{this.props.file.name}</span>
         </a>
       );
     } else {

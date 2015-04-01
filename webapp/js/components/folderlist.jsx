@@ -13,7 +13,7 @@ class FolderList extends React.Component {
     flist.sort((left, right) => left.name <= right.name ? -1 : 1);
 
     if (this.props.showBrowseUp) {
-      flist.unshift({name: '..', isDir: true});
+      flist.unshift({name: 'Go Back', isDir: true});
     }
 
     let folders = flist

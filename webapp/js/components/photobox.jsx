@@ -16,7 +16,7 @@ class Photobox extends React.Component {
     if (path.length) {
       filePath = '';
 
-      if (path === '..') {
+      if (path === 'Go Back') {
         this.state.fileStack.pop();
         path = '';
       } else {

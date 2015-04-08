@@ -3,6 +3,7 @@ package main
 import (
 	"encoding/json"
 	"fmt"
+	"html/template"
 	"log"
 	"net/http"
 	"net/url"
@@ -13,6 +14,32 @@ import (
 	"github.com/thedahv/go-photobox/lib"
 	"gopkg.in/fsnotify.v1"
 )
+
+var appMode string
+
+func init() {
+	appMode = os.Getenv("APPMODE")
+}
+
+func handleHomePage(w http.ResponseWriter, r *http.Request) {
+	// Serve homepage
+	t, err := template.ParseFiles("./webapp/views/index.html")
+
+	if err != nil {
+		var errorMsg string
+
+		w.WriteHeader(500)
+		if appMode == "development" {
+			errorMsg = fmt.Sprintf("Failed to load template: %s\n", err.Error())
+		} else {
+			fmt.Errorf("Failed to load template: %s\n", err.Error())
+			errorMsg = "Sorry! We hit an error. Please reload and try again"
+		}
+		fmt.Fprintf(w, errorMsg)
+	} else {
+		t.Execute(w, struct{ DevMode bool }{appMode == "development"})
+	}
+}
 
 func main() {
 	port := os.Getenv("PORT")
@@ -31,7 +58,15 @@ func main() {
 	fs := http.FileServer(http.Dir("public"))
 	pbfs := http.FileServer(http.Dir(photosPath))
 
-	http.Handle("/", fs)
+	http.HandleFunc("/", func(w http.ResponseWriter, r *http.Request) {
+		if r.URL.Path == "/" {
+			handleHomePage(w, r)
+		} else {
+			// Serve assets
+			fs.ServeHTTP(w, r)
+		}
+	})
+
 	http.Handle("/photos/", http.StripPrefix("/photos/", pbfs))
 
 	http.HandleFunc("/files", func(w http.ResponseWriter, r *http.Request) {
@@ -68,7 +103,7 @@ func main() {
 
 	// LiveReload setup
 	var done chan bool
-	if os.Getenv("APPMODE") == "development" {
+	if appMode == "development" {
 		lr, err := lrserver.New(lrserver.DefaultName, lrserver.DefaultPort)
 		if err != nil {
 			fmt.Println("Unable to start livereload! %s\n", err.Error())

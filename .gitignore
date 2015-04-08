@@ -2,3 +2,4 @@ go-photobox
 webapp/node_modules
 public/js
 public/css
+.env

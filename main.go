@@ -3,12 +3,15 @@ package main
 import (
 	"encoding/json"
 	"fmt"
+	"log"
 	"net/http"
 	"net/url"
 	"os"
 	"regexp"
 
+	"github.com/jaschaephraim/lrserver"
 	"github.com/thedahv/go-photobox/lib"
+	"gopkg.in/fsnotify.v1"
 )
 
 func main() {
@@ -63,8 +66,59 @@ func main() {
 		w.Write(jsonData)
 	})
 
+	// LiveReload setup
+	var done chan bool
+	if os.Getenv("APPMODE") == "development" {
+		lr, err := lrserver.New(lrserver.DefaultName, lrserver.DefaultPort)
+		if err != nil {
+			fmt.Println("Unable to start livereload! %s\n", err.Error())
+		}
+
+		watcher, err := fsnotify.NewWatcher()
+		if err != nil {
+			fmt.Println("Unable to create file watcher: %s\n", err.Error())
+		}
+		defer watcher.Close()
+
+		done = make(chan bool)
+		go func() {
+			for {
+				select {
+				case event := <-watcher.Events:
+					if event.Op&fsnotify.Write == fsnotify.Write {
+						lr.Reload(event.Name)
+					}
+				case err := <-watcher.Errors:
+					log.Println("Watcher error:", err)
+				}
+			}
+		}()
+
+		// Add dir to watcher
+		err = watcher.Add("public/js")
+		if err != nil {
+			fmt.Println("Unable to set up watcher on public/js folder: %s\n", err.Error())
+		}
+		err = watcher.Add("public/css")
+		if err != nil {
+			fmt.Println("Unable to set up watcher on public/css folder: %s\n", err.Error())
+		}
+
+		fmt.Println("No errors so far? Livereload watching public folder")
+		go lr.ListenAndServe()
+		// Start goroutine that requests reload upon watcher event
+		go func() {
+			for {
+				event := <-watcher.Events
+				lr.Reload(event.Name)
+			}
+		}()
+	}
+
 	fmt.Printf("Serving files from %s on port %s\n", photosPath, port)
 	http.ListenAndServe(":"+port, nil)
+	<-done
+	defer close(done)
 }
 
 // pathFromRequest takes a URI with a URL encoded query parameter for a path
